@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de Contactos Pro</title>
+  <meta name="description" content="Aplicación web moderna para gestionar, buscar, organizar y exportar tus contactos fácilmente.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div>
+          <h1>Gestor de Contactos</h1>
+          <p class="subtitle">Organiza, busca y administra tus contactos en un solo lugar</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Quick Stats -->
+        <div class="stats-badge" title="Total de contactos">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          <span id="total-contacts-count">0</span>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button id="btn-theme-toggle" class="btn-icon" aria-label="Cambiar Tema" title="Cambiar tema claro/oscuro">
+          <svg id="icon-sun" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+
+        <!-- Export Menu Button -->
+        <div class="dropdown">
+          <button id="btn-export-menu" class="btn-secondary" title="Opciones de exportación">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            <span>Exportar</span>
+          </button>
+          <div id="export-dropdown" class="dropdown-content hidden">
+            <button id="btn-export-json">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Exportar como JSON
+            </button>
+            <button id="btn-export-csv">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+              Exportar como CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Add Contact Primary CTA -->
+        <button id="btn-open-add-modal" class="btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Nuevo Contacto</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Toolbar: Search, Filters & View Toggle -->
+    <section class="toolbar-section">
+      <!-- Search Input -->
+      <div class="search-box">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Buscar por nombre, teléfono o email..." autocomplete="off">
+        <button id="btn-clear-search" class="btn-clear hidden" title="Limpiar búsqueda">&times;</button>
+      </div>
+
+      <!-- Filters & Controls -->
+      <div class="filter-controls">
+        <!-- Category Filter Pills -->
+        <div class="filter-pills" id="category-filters">
+          <button class="pill active" data-category="all">Todos</button>
+          <button class="pill" data-category="favorite">⭐ Favoritos</button>
+          <button class="pill" data-category="Trabajo">💼 Trabajo</button>
+          <button class="pill" data-category="Familia">🏠 Familia</button>
+          <button class="pill" data-category="Amigos">🎉 Amigos</button>
+          <button class="pill" data-category="Otros">📌 Otros</button>
+        </div>
+
+        <div class="sort-and-view">
+          <!-- Sort Selector -->
+          <div class="select-wrapper">
+            <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+            <select id="sort-select" aria-label="Ordenar contactos">
+              <option value="name-asc">Nombre (A-Z)</option>
+              <option value="name-desc">Nombre (Z-A)</option>
+              <option value="newest">Más recientes primero</option>
+              <option value="oldest">Más antiguos primero</option>
+            </select>
+          </div>
+
+          <!-- View Toggle (Grid / List) -->
+          <div class="view-toggle">
+            <button id="btn-view-grid" class="btn-view active" title="Vista Cuadrícula">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </button>
+            <button id="btn-view-list" class="btn-view" title="Vista Lista">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contacts Main Display Container -->
+    <main id="contacts-container" class="grid-layout">
+      <!-- Dynamic content rendered via JS -->
+    </main>
+
+    <!-- Empty State Template -->
+    <div id="empty-state" class="empty-state hidden">
+      <div class="empty-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
+      </div>
+      <h2 id="empty-title">Sin contactos encontrados</h2>
+      <p id="empty-description">No hay ningún contacto que coincida con tus criterios de búsqueda.</p>
+      <div class="empty-actions">
+        <button id="btn-reset-filters" class="btn-secondary hidden">Restablecer Filtros</button>
+        <button id="btn-load-demo" class="btn-primary">Cargar Contactos de Prueba</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Creating & Editing Contacts -->
+  <div id="contact-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <header class="modal-header">
+        <h2 id="modal-title">Nuevo Contacto</h2>
+        <button id="btn-close-modal" class="btn-close" aria-label="Cerrar modal">&times;</button>
+      </header>
+
+      <form id="contact-form">
+        <input type="hidden" id="contact-id">
+
+        <div class="form-group">
+          <label for="contact-name">Nombre Completo <span class="required">*</span></label>
+          <div class="input-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" id="contact-name" placeholder="Ej: Ana María García" required autocomplete="off">
+          </div>
+          <span class="error-msg" id="name-error"></span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contact-phone">Teléfono <span class="required">*</span></label>
+            <div class="input-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <input type="tel" id="contact-phone" placeholder="Ej: +34 612 345 678" required autocomplete="off">
+            </div>
+            <span class="error-msg" id="phone-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-email">Correo Electrónico</label>
+            <div class="input-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <input type="email" id="contact-email" placeholder="Ej: ana.garcia@email.com" autocomplete="off">
+            </div>
+            <span class="error-msg" id="email-error"></span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contact-category">Categoría</label>
+            <select id="contact-category">
+              <option value="Trabajo">💼 Trabajo</option>
+              <option value="Familia">🏠 Familia</option>
+              <option value="Amigos">🎉 Amigos</option>
+              <option value="Otros" selected>📌 Otros</option>
+            </select>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label class="checkbox-container">
+              <input type="checkbox" id="contact-favorite">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">⭐ Marcar como Favorito</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contact-notes">Notas adicionales (Opcional)</label>
+          <textarea id="contact-notes" rows="3" placeholder="Información de contacto, empresa, cumpleaños, etc."></textarea>
+        </div>
+
+        <footer class="modal-footer">
+          <button type="button" id="btn-cancel-modal" class="btn-secondary">Cancelar</button>
+          <button type="submit" id="btn-save-contact" class="btn-primary">Guardar Contacto</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+    <div class="modal-card modal-small">
+      <header class="modal-header">
+        <h2 id="delete-modal-title">¿Eliminar contacto?</h2>
+        <button id="btn-close-delete-modal" class="btn-close">&times;</button>
+      </header>
+      <div class="modal-body">
+        <p>¿Estás seguro de que deseas eliminar a <strong id="delete-contact-name">este contacto</strong>?</p>
+        <p class="text-subtle">Podrás deshacer esta acción durante unos segundos desde la notificación inferior.</p>
+      </div>
+      <footer class="modal-footer">
+        <button type="button" id="btn-cancel-delete" class="btn-secondary">Cancelar</button>
+        <button type="button" id="btn-confirm-delete" class="btn-danger">Eliminar</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>
