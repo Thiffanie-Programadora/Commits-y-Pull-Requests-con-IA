@@ -1394,8 +1394,153 @@ class I18nManager {
   }
 }
 
+// ==========================================================================
+//  AuthManager - Authentication Logic (Phone: 70920716)
+// ==========================================================================
+class AuthManager {
+  constructor() {
+    this.validPhone = '70920716';
+    
+    // DOM Elements
+    this.loginScreen = document.getElementById('login-screen');
+    this.mainApp = document.getElementById('main-app');
+    this.loginForm = document.getElementById('login-form');
+    this.phoneInput = document.getElementById('login-phone');
+    this.passwordInput = document.getElementById('login-password');
+    this.phoneError = document.getElementById('login-phone-error');
+    this.pwError = document.getElementById('login-pw-error');
+    this.btnTogglePw = document.getElementById('btn-toggle-login-pw');
+    this.pwEyeIcon = document.getElementById('pw-eye-login');
+    this.btnLogout = document.getElementById('btn-logout');
+    this.sessionPhoneDisplay = document.getElementById('session-phone-display');
+
+    this.init();
+  }
+
+  init() {
+    this.bindEvents();
+    this.checkSession();
+  }
+
+  bindEvents() {
+    // Submit Login Form
+    if (this.loginForm) {
+      this.loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleLogin();
+      });
+    }
+
+    // Toggle password visibility
+    if (this.btnTogglePw) {
+      this.btnTogglePw.addEventListener('click', () => {
+        const type = this.passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        this.passwordInput.setAttribute('type', type);
+      });
+    }
+
+    // Logout
+    if (this.btnLogout) {
+      this.btnLogout.addEventListener('click', () => {
+        this.logout();
+      });
+    }
+
+    // Clear errors on input
+    if (this.phoneInput) {
+      this.phoneInput.addEventListener('input', () => {
+        if (this.phoneError) this.phoneError.textContent = '';
+      });
+    }
+    if (this.passwordInput) {
+      this.passwordInput.addEventListener('input', () => {
+        if (this.pwError) this.pwError.textContent = '';
+      });
+    }
+  }
+
+  handleLogin() {
+    const rawPhone = this.phoneInput.value.trim();
+    const cleanPhone = rawPhone.replace(/\D/g, ''); // limpia espacios, guiones o signos +
+    const password = this.passwordInput.value.trim();
+
+    let hasError = false;
+
+    // Validar teléfono
+    if (!rawPhone) {
+      this.phoneError.textContent = 'Ingresa tu número de teléfono.';
+      hasError = true;
+    } else if (cleanPhone !== this.validPhone && rawPhone !== this.validPhone) {
+      this.phoneError.textContent = `Número incorrecto. El número registrado es ${this.validPhone}.`;
+      hasError = true;
+    }
+
+    // Validar contraseña
+    if (!password) {
+      this.pwError.textContent = 'Ingresa tu contraseña.';
+      hasError = true;
+    } else if (password.length < 4) {
+      this.pwError.textContent = 'La contraseña debe tener al menos 4 caracteres.';
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    // Guardar sesión
+    const userSession = {
+      phone: rawPhone,
+      loggedInAt: Date.now()
+    };
+    localStorage.setItem('app_session', JSON.stringify(userSession));
+
+    this.showApp(rawPhone);
+    if (window.contactApp) {
+      window.contactApp.showToast('¡Sesión iniciada correctamente! 👋', 'success');
+    }
+  }
+
+  checkSession() {
+    const session = localStorage.getItem('app_session');
+    if (session) {
+      try {
+        const data = JSON.parse(session);
+        if (data && data.phone) {
+          this.showApp(data.phone);
+          return;
+        }
+      } catch (e) {
+        localStorage.removeItem('app_session');
+      }
+    }
+    this.showLogin();
+  }
+
+  showApp(phone) {
+    if (this.loginScreen) this.loginScreen.classList.add('hidden');
+    if (this.mainApp) this.mainApp.classList.remove('hidden');
+    if (this.sessionPhoneDisplay) {
+      this.sessionPhoneDisplay.textContent = `📱 ${phone}`;
+    }
+  }
+
+  showLogin() {
+    if (this.loginScreen) this.loginScreen.classList.remove('hidden');
+    if (this.mainApp) this.mainApp.classList.add('hidden');
+    if (this.loginForm) this.loginForm.reset();
+  }
+
+  logout() {
+    localStorage.removeItem('app_session');
+    this.showLogin();
+    if (window.contactApp) {
+      window.contactApp.showToast('Sesión cerrada', 'info');
+    }
+  }
+}
+
 // Initialize Application when DOM ready
 document.addEventListener('DOMContentLoaded', () => {
+  window.authManager = new AuthManager();
   window.i18n = new I18nManager();
   window.contactApp = new ContactApp();
   window.thifiAssistant = new ThifiAssistant(window.contactApp);
