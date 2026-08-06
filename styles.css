@@ -512,21 +512,30 @@ body {
   white-space: nowrap;
 }
 
-.btn-logout {
-  background: none;
-  border: none;
-  cursor: pointer;
+.btn-logout,
+.btn-logout-full {
+  background: rgba(244, 63, 94, 0.1);
+  border: 1px solid rgba(244, 63, 94, 0.25);
   color: var(--danger-color);
-  padding: 3px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0.35rem 0.65rem;
   display: flex;
   align-items: center;
-  border-radius: 6px;
-  transition: background 0.2s ease, transform 0.2s ease;
+  gap: 0.35rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
-.btn-logout:hover {
-  background: rgba(244, 63, 94, 0.15);
-  transform: scale(1.1);
+.btn-logout:hover,
+.btn-logout-full:hover {
+  background: var(--danger-color);
+  color: #ffffff;
+  border-color: var(--danger-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
 }
 
 

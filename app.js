@@ -1129,6 +1129,7 @@ const TRANSLATIONS = {
     exportJson: 'Exportar como JSON',
     exportCsv: 'Exportar como CSV',
     newContact: 'Nuevo Contacto',
+    logoutBtn: 'Cerrar Sesión',
     // Search & filters
     searchPlaceholder: 'Buscar por nombre, teléfono o email...',
     clearSearch: 'Limpiar búsqueda',
@@ -1233,6 +1234,7 @@ const TRANSLATIONS = {
     exportJson: 'Export as JSON',
     exportCsv: 'Export as CSV',
     newContact: 'New Contact',
+    logoutBtn: 'Log out',
     // Search & filters
     searchPlaceholder: 'Search by name, phone or email...',
     clearSearch: 'Clear search',
