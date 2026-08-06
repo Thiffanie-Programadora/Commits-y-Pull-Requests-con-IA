@@ -36,38 +36,45 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
         <div>
-          <h1>Gestor de Contactos</h1>
-          <p class="subtitle">Organiza, busca y administra tus contactos en un solo lugar</p>
+          <h1 data-i18n="appTitle">Gestor de Contactos</h1>
+          <p class="subtitle" data-i18n="appSubtitle">Organiza, busca y administra tus contactos en un solo lugar</p>
         </div>
       </div>
 
       <div class="header-actions">
         <!-- Quick Stats -->
-        <div class="stats-badge" title="Total de contactos">
+        <div class="stats-badge" data-i18n-title="statsTitle" title="Total de contactos">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
           <span id="total-contacts-count">0</span>
         </div>
 
+        <!-- Language Switcher Toggle Button (Desactivado: ES | Activo: EN) -->
+        <button id="btn-lang-toggle" class="btn-lang-toggle" aria-label="Cambiar idioma" data-i18n-title="langTitle" title="Desactivado: Español | Activo: English">
+          <span class="lang-option lang-es">ES</span>
+          <span class="lang-slider"></span>
+          <span class="lang-option lang-en">EN</span>
+        </button>
+
         <!-- Theme Toggle -->
-        <button id="btn-theme-toggle" class="btn-icon" aria-label="Cambiar Tema" title="Cambiar tema claro/oscuro">
+        <button id="btn-theme-toggle" class="btn-icon" aria-label="Cambiar Tema" data-i18n-title="themeTitleDark" title="Cambiar tema claro/oscuro">
           <svg id="icon-sun" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
           <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>
         </button>
 
         <!-- Export Menu Button -->
         <div class="dropdown">
-          <button id="btn-export-menu" class="btn-secondary" title="Opciones de exportación">
+          <button id="btn-export-menu" class="btn-secondary" data-i18n-title="exportMenuTitle" title="Opciones de exportación">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-            <span>Exportar</span>
+            <span data-i18n="exportBtn">Exportar</span>
           </button>
           <div id="export-dropdown" class="dropdown-content hidden">
             <button id="btn-export-json">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              Exportar como JSON
+              <span data-i18n="exportJson">Exportar como JSON</span>
             </button>
             <button id="btn-export-csv">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
-              Exportar como CSV
+              <span data-i18n="exportCsv">Exportar como CSV</span>
             </button>
           </div>
         </div>
@@ -75,7 +82,7 @@
         <!-- Add Contact Primary CTA -->
         <button id="btn-open-add-modal" class="btn-primary">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span>Nuevo Contacto</span>
+          <span data-i18n="newContact">Nuevo Contacto</span>
         </button>
       </div>
     </header>
@@ -85,20 +92,20 @@
       <!-- Search Input -->
       <div class="search-box">
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="search-input" placeholder="Buscar por nombre, teléfono o email..." autocomplete="off">
-        <button id="btn-clear-search" class="btn-clear hidden" title="Limpiar búsqueda">&times;</button>
+        <input type="text" id="search-input" data-i18n-placeholder="searchPlaceholder" placeholder="Buscar por nombre, teléfono o email..." autocomplete="off">
+        <button id="btn-clear-search" class="btn-clear hidden" data-i18n-title="clearSearch" title="Limpiar búsqueda">&times;</button>
       </div>
 
       <!-- Filters & Controls -->
       <div class="filter-controls">
         <!-- Category Filter Pills -->
         <div class="filter-pills" id="category-filters">
-          <button class="pill active" data-category="all">Todos</button>
-          <button class="pill" data-category="favorite">⭐ Favoritos</button>
-          <button class="pill" data-category="Trabajo">💼 Trabajos</button>
-          <button class="pill" data-category="Familia">🏠 Familias</button>
-          <button class="pill" data-category="Amigos">🎉 Amigos</button>
-          <button class="pill" data-category="Otros">📌 Otros</button>
+          <button class="pill active" data-category="all" data-i18n="catAll">Todos</button>
+          <button class="pill" data-category="favorite" data-i18n="catFavorite">⭐ Favoritos</button>
+          <button class="pill" data-category="Trabajo" data-i18n="catTrabajo">💼 Trabajos</button>
+          <button class="pill" data-category="Familia" data-i18n="catFamilia">🏠 Familias</button>
+          <button class="pill" data-category="Amigos" data-i18n="catAmigos">🎉 Amigos</button>
+          <button class="pill" data-category="Otros" data-i18n="catOtros">📌 Otros</button>
         </div>
 
         <div class="sort-and-view">
@@ -106,19 +113,19 @@
           <div class="select-wrapper">
             <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
             <select id="sort-select" aria-label="Ordenar contactos">
-              <option value="name-asc">Nombre (A-Z)</option>
-              <option value="name-desc">Nombre (Z-A)</option>
-              <option value="newest">Más recientes primero</option>
-              <option value="oldest">Más antiguos primero</option>
+              <option value="name-asc" data-i18n="sortNameAsc">Nombre (A-Z)</option>
+              <option value="name-desc" data-i18n="sortNameDesc">Nombre (Z-A)</option>
+              <option value="newest" data-i18n="sortNewest">Más recientes primero</option>
+              <option value="oldest" data-i18n="sortOldest">Más antiguos primero</option>
             </select>
           </div>
 
           <!-- View Toggle (Grid / List) -->
           <div class="view-toggle">
-            <button id="btn-view-grid" class="btn-view active" title="Vista Cuadrícula">
+            <button id="btn-view-grid" class="btn-view active" data-i18n-title="viewGridTitle" title="Vista Cuadrícula">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             </button>
-            <button id="btn-view-list" class="btn-view" title="Vista Lista">
+            <button id="btn-view-list" class="btn-view" data-i18n-title="viewListTitle" title="Vista Lista">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
             </button>
           </div>
@@ -136,11 +143,11 @@
       <div class="empty-icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
       </div>
-      <h2 id="empty-title">Sin contactos encontrados</h2>
-      <p id="empty-description">No hay ningún contacto que coincida con tus criterios de búsqueda.</p>
+      <h2 id="empty-title" data-i18n="emptyTitle">Sin contactos encontrados</h2>
+      <p id="empty-description" data-i18n="emptyDesc">No hay ningún contacto que coincida con tus criterios de búsqueda.</p>
       <div class="empty-actions">
-        <button id="btn-reset-filters" class="btn-secondary hidden">Restablecer Filtros</button>
-        <button id="btn-load-demo" class="btn-primary">Cargar Contactos de Prueba</button>
+        <button id="btn-reset-filters" class="btn-secondary hidden" data-i18n="btnResetFilters">Restablecer Filtros</button>
+        <button id="btn-load-demo" class="btn-primary" data-i18n="btnLoadDemo">Cargar Contactos de Prueba</button>
       </div>
     </div>
   </div>
@@ -149,7 +156,7 @@
   <div id="contact-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-card">
       <header class="modal-header">
-        <h2 id="modal-title">Nuevo Contacto</h2>
+        <h2 id="modal-title" data-i18n="modalTitleNew">Nuevo Contacto</h2>
         <button id="btn-close-modal" class="btn-close" aria-label="Cerrar modal">&times;</button>
       </header>
 
@@ -157,29 +164,29 @@
         <input type="hidden" id="contact-id">
 
         <div class="form-group">
-          <label for="contact-name">Nombre Completo <span class="required">*</span></label>
+          <label for="contact-name"><span data-i18n="labelName">Nombre Completo</span> <span class="required">*</span></label>
           <div class="input-icon-wrapper">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <input type="text" id="contact-name" placeholder="Ej: Ana María García" required autocomplete="off">
+            <input type="text" id="contact-name" data-i18n-placeholder="namePlaceholder" placeholder="Ej: Ana María García" required autocomplete="off">
           </div>
           <span class="error-msg" id="name-error"></span>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="contact-phone">Teléfono <span class="required">*</span></label>
+            <label for="contact-phone"><span data-i18n="labelPhone">Teléfono</span> <span class="required">*</span></label>
             <div class="input-icon-wrapper">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              <input type="tel" id="contact-phone" placeholder="Ej: +34 612 345 678" required autocomplete="off">
+              <input type="tel" id="contact-phone" data-i18n-placeholder="phonePlaceholder" placeholder="Ej: +34 612 345 678" required autocomplete="off">
             </div>
             <span class="error-msg" id="phone-error"></span>
           </div>
 
           <div class="form-group">
-            <label for="contact-email">Correo Electrónico</label>
+            <label for="contact-email" data-i18n="labelEmail">Correo Electrónico</label>
             <div class="input-icon-wrapper">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              <input type="email" id="contact-email" placeholder="Ej: ana.garcia@email.com" autocomplete="off">
+              <input type="email" id="contact-email" data-i18n-placeholder="emailPlaceholder" placeholder="Ej: ana.garcia@email.com" autocomplete="off">
             </div>
             <span class="error-msg" id="email-error"></span>
           </div>
@@ -187,12 +194,12 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label for="contact-category">Categoría</label>
+            <label for="contact-category" data-i18n="labelCategory">Categoría</label>
             <select id="contact-category">
-              <option value="Trabajo">💼 Trabajo</option>
-              <option value="Familia">🏠 Familia</option>
-              <option value="Amigos">🎉 Amigos</option>
-              <option value="Otros" selected>📌 Otros</option>
+              <option value="Trabajo" data-i18n="optTrabajo">💼 Trabajo</option>
+              <option value="Familia" data-i18n="optFamilia">🏠 Familia</option>
+              <option value="Amigos" data-i18n="optAmigos">🎉 Amigos</option>
+              <option value="Otros" data-i18n="optOtros" selected>📌 Otros</option>
             </select>
           </div>
 
@@ -200,19 +207,19 @@
             <label class="checkbox-container">
               <input type="checkbox" id="contact-favorite">
               <span class="checkmark"></span>
-              <span class="checkbox-label">⭐ Marcar como Favorito</span>
+              <span class="checkbox-label" data-i18n="labelFavorite">⭐ Marcar como Favorito</span>
             </label>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="contact-notes">Notas adicionales (Opcional)</label>
-          <textarea id="contact-notes" rows="3" placeholder="Información de contacto, empresa, cumpleaños, etc."></textarea>
+          <label for="contact-notes" data-i18n="labelNotes">Notas adicionales (Opcional)</label>
+          <textarea id="contact-notes" data-i18n-placeholder="notesPlaceholder" rows="3" placeholder="Información de contacto, empresa, cumpleaños, etc."></textarea>
         </div>
 
         <footer class="modal-footer">
-          <button type="button" id="btn-cancel-modal" class="btn-secondary">Cancelar</button>
-          <button type="submit" id="btn-save-contact" class="btn-primary">Guardar Contacto</button>
+          <button type="button" id="btn-cancel-modal" class="btn-secondary" data-i18n="btnCancel">Cancelar</button>
+          <button type="submit" id="btn-save-contact" class="btn-primary" data-i18n="btnSaveNew">Guardar Contacto</button>
         </footer>
       </form>
     </div>
@@ -222,16 +229,16 @@
   <div id="delete-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
     <div class="modal-card modal-small">
       <header class="modal-header">
-        <h2 id="delete-modal-title">¿Eliminar contacto?</h2>
+        <h2 id="delete-modal-title" data-i18n="deleteTitle">¿Eliminar contacto?</h2>
         <button id="btn-close-delete-modal" class="btn-close">&times;</button>
       </header>
       <div class="modal-body">
-        <p>¿Estás seguro de que deseas eliminar a <strong id="delete-contact-name">este contacto</strong>?</p>
-        <p class="text-subtle">Podrás deshacer esta acción durante unos segundos desde la notificación inferior.</p>
+        <p><span data-i18n="deleteBodyPrefix">¿Estás seguro de que deseas eliminar a</span> <strong id="delete-contact-name">este contacto</strong><span data-i18n="deleteBodySuffix">?</span></p>
+        <p class="text-subtle" data-i18n="deleteSubtle">Podrás deshacer esta acción durante unos segundos desde la notificación inferior.</p>
       </div>
       <footer class="modal-footer">
-        <button type="button" id="btn-cancel-delete" class="btn-secondary">Cancelar</button>
-        <button type="button" id="btn-confirm-delete" class="btn-danger">Eliminar</button>
+        <button type="button" id="btn-cancel-delete" class="btn-secondary" data-i18n="btnCancel">Cancelar</button>
+        <button type="button" id="btn-confirm-delete" class="btn-danger" data-i18n="btnDeleteConfirm">Eliminar</button>
       </footer>
     </div>
   </div>
@@ -242,7 +249,7 @@
   <!-- THIFI AI Assistant Floating Chat Widget -->
   <div id="thifi-widget" class="thifi-widget">
     <!-- Floating Chat Trigger Button -->
-    <button id="thifi-chat-trigger" class="thifi-trigger-btn" aria-label="Abrir asistente THIFI" title="THIFI - Asistente con IA">
+    <button id="thifi-chat-trigger" class="thifi-trigger-btn" aria-label="Abrir asistente THIFI" data-i18n-title="thifiTriggerTitle" title="THIFI - Asistente con IA">
       <div class="thifi-avatar-glow">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
@@ -252,7 +259,7 @@
           <circle cx="12" cy="12" r="3" fill="currentColor"></circle>
         </svg>
       </div>
-      <span class="thifi-trigger-label">Habla con THIFI ✨</span>
+      <span class="thifi-trigger-label" data-i18n="thifiTrigger">Habla con THIFI ✨</span>
       <span class="thifi-badge-dot"></span>
     </button>
 
@@ -273,16 +280,16 @@
           <div>
             <div class="thifi-title-row">
               <h3 class="thifi-name">THIFI</h3>
-              <span class="thifi-ai-tag">IA Soporte</span>
+              <span class="thifi-ai-tag" data-i18n="thifiAiTag">IA Soporte</span>
             </div>
-            <p class="thifi-subtitle">Asistente Virtual de tu Agenda</p>
+            <p class="thifi-subtitle" data-i18n="thifiSubtitle">Asistente Virtual de tu Agenda</p>
           </div>
         </div>
         <div class="thifi-header-actions">
-          <button id="btn-thifi-clear" class="thifi-icon-btn" title="Limpiar conversación" aria-label="Limpiar conversación">
+          <button id="btn-thifi-clear" class="thifi-icon-btn" data-i18n-title="thifiClearTitle" title="Limpiar conversación" aria-label="Limpiar conversación">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
           </button>
-          <button id="btn-thifi-close" class="thifi-icon-btn" title="Minimizar chat" aria-label="Minimizar chat">
+          <button id="btn-thifi-close" class="thifi-icon-btn" data-i18n-title="thifiCloseTitle" title="Minimizar chat" aria-label="Minimizar chat">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
@@ -290,11 +297,11 @@
 
       <!-- Quick Suggestion Chips -->
       <div id="thifi-suggestions" class="thifi-suggestions-bar">
-        <button class="thifi-chip" data-query="Buscar un contacto">🔍 Buscar contacto</button>
-        <button class="thifi-chip" data-query="Crear ticket de soporte">🎫 Crear soporte</button>
-        <button class="thifi-chip" data-query="Mostrar mis contactos favoritos">⭐ Mis Favoritos</button>
-        <button class="thifi-chip" data-query="Ver mis tickets de soporte">📋 Mis Tickets</button>
-        <button class="thifi-chip" data-query="¿Cómo exportar contactos?">❓ Ayuda</button>
+        <button class="thifi-chip" data-query="Buscar un contacto" data-i18n="thifiChipSearch">🔍 Buscar contacto</button>
+        <button class="thifi-chip" data-query="Crear ticket de soporte" data-i18n="thifiChipSupport">🎫 Crear soporte</button>
+        <button class="thifi-chip" data-query="Mostrar mis contactos favoritos" data-i18n="thifiChipFavorites">⭐ Mis Favoritos</button>
+        <button class="thifi-chip" data-query="Ver mis tickets de soporte" data-i18n="thifiChipTickets">📋 Mis Tickets</button>
+        <button class="thifi-chip" data-query="¿Cómo exportar contactos?" data-i18n="thifiChipHelp">❓ Ayuda</button>
       </div>
 
       <!-- Chat Messages Area -->
@@ -307,13 +314,13 @@
         <div class="thifi-typing-dots">
           <span></span><span></span><span></span>
         </div>
-        <span class="thifi-typing-text">THIFI está escribiendo...</span>
+        <span class="thifi-typing-text" data-i18n="thifiTyping">THIFI está escribiendo...</span>
       </div>
 
       <!-- Input Form -->
       <form id="thifi-chat-form" class="thifi-footer">
-        <input type="text" id="thifi-input" placeholder="Pregúntame algo o busca un contacto..." autocomplete="off" maxlength="300">
-        <button type="submit" id="btn-thifi-send" title="Enviar mensaje" aria-label="Enviar mensaje">
+        <input type="text" id="thifi-input" data-i18n-placeholder="thifiPlaceholder" placeholder="Pregúntame algo o busca un contacto..." autocomplete="off" maxlength="300">
+        <button type="submit" id="btn-thifi-send" data-i18n-title="thifiSendTitle" title="Enviar mensaje" aria-label="Enviar mensaje">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
       </form>
