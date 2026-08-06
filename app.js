@@ -1520,12 +1520,6 @@ class AuthManager {
   showApp(phone) {
     if (this.loginScreen) this.loginScreen.classList.add('hidden');
     if (this.mainApp) this.mainApp.classList.remove('hidden');
-    if (this.sessionPhoneDisplay) {
-      const maskedPhone = phone.length > 4 
-        ? phone.slice(0, 2) + '****' + phone.slice(-2) 
-        : '••••••••';
-      this.sessionPhoneDisplay.textContent = `📱 ${maskedPhone}`;
-    }
   }
 
   showLogin() {
