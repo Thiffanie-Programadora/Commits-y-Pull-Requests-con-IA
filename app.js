@@ -1471,7 +1471,7 @@ class AuthManager {
       this.phoneError.textContent = 'Ingresa tu número de teléfono.';
       hasError = true;
     } else if (cleanPhone !== this.validPhone && rawPhone !== this.validPhone) {
-      this.phoneError.textContent = `Número incorrecto. El número registrado es ${this.validPhone}.`;
+      this.phoneError.textContent = 'Número de teléfono incorrecto.';
       hasError = true;
     }
 
@@ -1519,7 +1519,10 @@ class AuthManager {
     if (this.loginScreen) this.loginScreen.classList.add('hidden');
     if (this.mainApp) this.mainApp.classList.remove('hidden');
     if (this.sessionPhoneDisplay) {
-      this.sessionPhoneDisplay.textContent = `📱 ${phone}`;
+      const maskedPhone = phone.length > 4 
+        ? phone.slice(0, 2) + '****' + phone.slice(-2) 
+        : '••••••••';
+      this.sessionPhoneDisplay.textContent = `📱 ${maskedPhone}`;
     }
   }
 
