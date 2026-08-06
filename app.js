@@ -216,7 +216,8 @@ class ContactApp {
     this.btnLoadDemo.addEventListener('click', () => {
       this.contacts = [...DEMO_CONTACTS];
       this.saveContacts();
-      this.showToast('Contactos de prueba cargados correctamente', 'success');
+      const tr = (window.i18n ? window.i18n.t.bind(window.i18n) : k => k);
+      this.showToast(tr('toastDemoLoaded'), 'success');
       this.render();
     });
   }
@@ -297,14 +298,15 @@ class ContactApp {
       this.contactsContainer.classList.add('hidden');
       this.emptyState.classList.remove('hidden');
 
+      const tr = (window.i18n ? window.i18n.t.bind(window.i18n) : k => k);
       if (this.contacts.length === 0) {
-        this.emptyTitle.textContent = '¡Tu agenda está vacía!';
-        this.emptyDesc.textContent = 'Añade tu primer contacto o carga los datos de prueba.';
+        this.emptyTitle.textContent = tr('emptyAgendaTitle');
+        this.emptyDesc.textContent = tr('emptyAgendaDesc');
         this.btnResetFilters.classList.add('hidden');
         this.btnLoadDemo.classList.remove('hidden');
       } else {
-        this.emptyTitle.textContent = 'Sin resultados';
-        this.emptyDesc.textContent = 'No se encontraron contactos que coincidan con la búsqueda o filtro actual.';
+        this.emptyTitle.textContent = tr('emptySearchTitle');
+        this.emptyDesc.textContent = tr('emptySearchDesc');
         this.btnResetFilters.classList.remove('hidden');
         this.btnLoadDemo.classList.add('hidden');
       }
@@ -336,13 +338,14 @@ class ContactApp {
     const cleanPhone = contact.phone.replace(/[^\d+]/g, '');
     const whatsappUrl = `https://wa.me/${cleanPhone.replace('+', '')}`;
 
+    const tr = (window.i18n ? window.i18n.t.bind(window.i18n) : k => k);
     card.innerHTML = `
       <div class="card-header">
         <div class="avatar" style="background: ${avatarBg}">${initials}</div>
         <div class="info">
           <div class="info-name-row">
             <h3 class="contact-name" title="${this.escapeHTML(contact.name)}">${this.escapeHTML(contact.name)}</h3>
-            <button class="btn-star ${contact.favorite ? 'active' : ''}" title="${contact.favorite ? 'Quitar de favoritos' : 'Marcar favorito'}" data-action="toggle-star">
+            <button class="btn-star ${contact.favorite ? 'active' : ''}" title="${contact.favorite ? tr('starRemove') : tr('starAdd')}" data-action="toggle-star">
               ★
             </button>
           </div>
@@ -351,13 +354,13 @@ class ContactApp {
       </div>
 
       <div class="card-details">
-        <div class="detail-item" title="Teléfono">
+        <div class="detail-item" title="${tr('cardPhone')}">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
           <span>${this.escapeHTML(contact.phone)}</span>
         </div>
 
         ${contact.email ? `
-        <div class="detail-item" title="Correo electrónico">
+        <div class="detail-item" title="${tr('cardEmail')}">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           <span>${this.escapeHTML(contact.email)}</span>
         </div>
@@ -368,24 +371,24 @@ class ContactApp {
 
       <div class="card-actions">
         <div class="quick-communication">
-          <a href="tel:${cleanPhone}" class="action-icon-btn" title="Llamar">
+          <a href="tel:${cleanPhone}" class="action-icon-btn" title="${tr('cardCall')}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
           </a>
           ${contact.email ? `
-          <a href="mailto:${contact.email}" class="action-icon-btn" title="Enviar correo">
+          <a href="mailto:${contact.email}" class="action-icon-btn" title="${tr('cardMail')}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </a>
           ` : ''}
-          <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="action-icon-btn whatsapp" title="Enviar WhatsApp">
+          <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="action-icon-btn whatsapp" title="${tr('cardWhatsApp')}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
           </a>
         </div>
 
         <div class="card-manage-btns">
-          <button class="btn-card-edit" title="Editar contacto" data-action="edit">
+          <button class="btn-card-edit" title="${tr('cardEdit')}" data-action="edit">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
           </button>
-          <button class="btn-card-delete" title="Eliminar contacto" data-action="delete">
+          <button class="btn-card-delete" title="${tr('cardDelete')}" data-action="delete">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
           </button>
         </div>
@@ -416,7 +419,8 @@ class ContactApp {
       contact.favorite = !contact.favorite;
       this.saveContacts();
       this.render();
-      this.showToast(contact.favorite ? `⭐ ${contact.name} agregado a favoritos` : `Quitado de favoritos`, 'success');
+      const tr = (window.i18n ? window.i18n.t.bind(window.i18n) : k => k);
+      this.showToast(contact.favorite ? `⭐ ${contact.name} ${tr('toastAdded')}` : tr('toastRemoved'), 'success');
     }
   }
 
@@ -425,8 +429,9 @@ class ContactApp {
     this.contactForm.reset();
     document.querySelectorAll('.error-msg').forEach(el => el.textContent = '');
 
+    const tr = (window.i18n ? window.i18n.t.bind(window.i18n) : k => k);
     if (contactToEdit) {
-      this.modalTitle.textContent = 'Editar Contacto';
+      this.modalTitle.textContent = tr('modalTitleEdit');
       this.contactIdInput.value = contactToEdit.id;
       this.nameInput.value = contactToEdit.name;
       this.phoneInput.value = contactToEdit.phone;
@@ -435,7 +440,7 @@ class ContactApp {
       this.favoriteInput.checked = contactToEdit.favorite || false;
       this.notesInput.value = contactToEdit.notes || '';
     } else {
-      this.modalTitle.textContent = 'Nuevo Contacto';
+      this.modalTitle.textContent = tr('modalTitleNew');
       this.contactIdInput.value = '';
     }
 
@@ -458,14 +463,15 @@ class ContactApp {
     const favorite = this.favoriteInput.checked;
     const notes = this.notesInput.value.trim();
 
+    const tr = (window.i18n ? window.i18n.t.bind(window.i18n) : k => k);
     // Basic Validation
     if (!name) {
-      document.getElementById('name-error').textContent = 'El nombre es obligatorio.';
+      document.getElementById('name-error').textContent = tr('validName');
       return;
     }
 
     if (!phone) {
-      document.getElementById('phone-error').textContent = 'El teléfono es obligatorio.';
+      document.getElementById('phone-error').textContent = tr('validPhone');
       return;
     }
 
@@ -477,7 +483,7 @@ class ContactApp {
           ...this.contacts[index],
           name, phone, email, category, favorite, notes
         };
-        this.showToast(`Contacto "${name}" actualizado`, 'success');
+        this.showToast(`"${name}" ${tr('toastUpdated')}`, 'success');
       }
     } else {
       // Create new contact
@@ -487,7 +493,7 @@ class ContactApp {
         createdAt: Date.now()
       };
       this.contacts.unshift(newContact);
-      this.showToast(`Contacto "${name}" guardado`, 'success');
+      this.showToast(`"${name}" ${tr('toastSaved')}`, 'success');
     }
 
     this.saveContacts();
@@ -522,7 +528,8 @@ class ContactApp {
       this.saveContacts();
       this.render();
 
-      this.showToastWithUndo(`Contacto "${deletedName}" eliminado`);
+      const tr2 = (window.i18n ? window.i18n.t.bind(window.i18n) : k => k);
+      this.showToastWithUndo(`"${deletedName}" ${tr2('toastDeleted')}`);
     }
 
     this.closeDeleteModal();
@@ -535,7 +542,8 @@ class ContactApp {
       this.saveContacts();
       this.lastDeletedContact = null;
       this.render();
-      this.showToast(`Restablecido "${contact.name}"`, 'success');
+      const tr3 = (window.i18n ? window.i18n.t.bind(window.i18n) : k => k);
+      this.showToast(`${tr3('toastRestored')} "${contact.name}"`, 'success');
     }
   }
 
@@ -579,8 +587,9 @@ class ContactApp {
 
   // Data Export Functions
   exportContactsJSON() {
+    const tr = (window.i18n ? window.i18n.t.bind(window.i18n) : k => k);
     if (this.contacts.length === 0) {
-      this.showToast('No hay contactos para exportar', 'error');
+      this.showToast(tr('toastNoExport'), 'error');
       return;
     }
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.contacts, null, 2));
@@ -590,12 +599,14 @@ class ContactApp {
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
-    this.showToast('Contactos exportados a JSON', 'success');
+    const tr4 = (window.i18n ? window.i18n.t.bind(window.i18n) : k => k);
+    this.showToast(tr4('toastExportedJson'), 'success');
   }
 
   exportContactsCSV() {
+    const tr = (window.i18n ? window.i18n.t.bind(window.i18n) : k => k);
     if (this.contacts.length === 0) {
-      this.showToast('No hay contactos para exportar', 'error');
+      this.showToast(tr('toastNoExport'), 'error');
       return;
     }
 
@@ -616,7 +627,8 @@ class ContactApp {
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
-    this.showToast('Contactos exportados a CSV', 'success');
+    const tr5 = (window.i18n ? window.i18n.t.bind(window.i18n) : k => k);
+    this.showToast(tr5('toastExportedCsv'), 'success');
   }
 
   // Helpers
@@ -1101,9 +1113,294 @@ Puedo ayudarte con:
   }
 }
 
+// ==========================================================================
+//  I18n - Internationalization Manager (ES / EN)
+// ==========================================================================
+const TRANSLATIONS = {
+  es: {
+    // Header & title
+    appTitle: 'Gestor de Contactos',
+    appSubtitle: 'Organiza, busca y administra tus contactos en un solo lugar',
+    statsTitle: 'Total de contactos',
+    langTitle: 'Desactivado: Español | Activo: English',
+    themeTitleDark: 'Cambiar tema claro/oscuro',
+    exportMenuTitle: 'Opciones de exportación',
+    exportBtn: 'Exportar',
+    exportJson: 'Exportar como JSON',
+    exportCsv: 'Exportar como CSV',
+    newContact: 'Nuevo Contacto',
+    // Search & filters
+    searchPlaceholder: 'Buscar por nombre, teléfono o email...',
+    clearSearch: 'Limpiar búsqueda',
+    catAll: 'Todos',
+    catFavorite: '⭐ Favoritos',
+    catTrabajo: '💼 Trabajos',
+    catFamilia: '🏠 Familias',
+    catAmigos: '🎉 Amigos',
+    catOtros: '📌 Generales',
+    sortNameAsc: 'Nombre (A-Z)',
+    sortNameDesc: 'Nombre (Z-A)',
+    sortNewest: 'Más recientes primero',
+    sortOldest: 'Más antiguos primero',
+    viewGridTitle: 'Vista Cuadrícula',
+    viewListTitle: 'Vista Lista',
+    // Empty state
+    emptyTitle: 'Sin contactos encontrados',
+    emptyDesc: 'No hay ningún contacto que coincida con tus criterios de búsqueda.',
+    btnResetFilters: 'Restablecer Filtros',
+    btnLoadDemo: 'Cargar Contactos de Prueba',
+    // Contact modal
+    modalTitleNew: 'Nuevo Contacto',
+    modalTitleEdit: 'Editar Contacto',
+    labelName: 'Nombre Completo',
+    namePlaceholder: 'Ej: Ana María García',
+    labelPhone: 'Teléfono',
+    phonePlaceholder: 'Ej: +34 612 345 678',
+    labelEmail: 'Correo Electrónico',
+    emailPlaceholder: 'Ej: ana.garcia@email.com',
+    labelCategory: 'Categoría',
+    optTrabajo: '💼 Trabajo',
+    optFamilia: '🏠 Familia',
+    optAmigos: '🎉 Amigos',
+    optOtros: '📌 General',
+    labelFavorite: '⭐ Marcar como Favorito',
+    labelNotes: 'Notas adicionales (Opcional)',
+    notesPlaceholder: 'Información de contacto, empresa, cumpleaños, etc.',
+    btnCancel: 'Cancelar',
+    btnSaveNew: 'Guardar Contacto',
+    btnSaveEdit: 'Actualizar Contacto',
+    // Delete modal
+    deleteTitle: '¿Eliminar contacto?',
+    deleteBodyPrefix: '¿Estás seguro de que deseas eliminar a',
+    deleteBodySuffix: '?',
+    deleteSubtle: 'Podrás deshacer esta acción durante unos segundos desde la notificación inferior.',
+    btnDeleteConfirm: 'Eliminar',
+    // THIFI widget
+    thifiTriggerTitle: 'THIFI - Asistente con IA',
+    thifiTrigger: 'Habla con THIFI ✨',
+    thifiAiTag: 'IA Soporte',
+    thifiSubtitle: 'Asistente Virtual de tu Agenda',
+    thifiClearTitle: 'Limpiar conversación',
+    thifiCloseTitle: 'Minimizar chat',
+    thifiChipSearch: '🔍 Buscar contacto',
+    thifiChipSupport: '🎫 Crear soporte',
+    thifiChipFavorites: '⭐ Mis Favoritos',
+    thifiChipTickets: '📋 Mis Tickets',
+    thifiChipHelp: '❓ Ayuda',
+    thifiTyping: 'THIFI está escribiendo...',
+    thifiPlaceholder: 'Pregúntame algo o busca un contacto...',
+    thifiSendTitle: 'Enviar mensaje',
+    // Toast / validation messages
+    toastAdded: 'agregado a favoritos',
+    toastRemoved: 'Quitado de favoritos',
+    toastSaved: 'guardado',
+    toastUpdated: 'actualizado',
+    toastDeleted: 'eliminado',
+    toastRestored: 'Restablecido',
+    toastDemoLoaded: 'Contactos de prueba cargados correctamente',
+    toastNoExport: 'No hay contactos para exportar',
+    toastExportedJson: 'Contactos exportados a JSON',
+    toastExportedCsv: 'Contactos exportados a CSV',
+    // Validation
+    validName: 'El nombre es obligatorio.',
+    validPhone: 'El teléfono es obligatorio.',
+    // Empty states dynamic
+    emptyAgendaTitle: '¡Tu agenda está vacía!',
+    emptyAgendaDesc: 'Añade tu primer contacto o carga los datos de prueba.',
+    emptySearchTitle: 'Sin resultados',
+    emptySearchDesc: 'No se encontraron contactos que coincidan con la búsqueda o filtro actual.',
+    // Star titles
+    starAdd: 'Marcar favorito',
+    starRemove: 'Quitar de favoritos',
+    // Card action titles
+    cardPhone: 'Teléfono',
+    cardEmail: 'Correo electrónico',
+    cardCall: 'Llamar',
+    cardMail: 'Enviar correo',
+    cardWhatsApp: 'Enviar WhatsApp',
+    cardEdit: 'Editar contacto',
+    cardDelete: 'Eliminar contacto',
+  },
+  en: {
+    // Header & title
+    appTitle: 'Contact Manager',
+    appSubtitle: 'Organize, search and manage your contacts in one place',
+    statsTitle: 'Total contacts',
+    langTitle: 'Active: English | Inactive: Español',
+    themeTitleDark: 'Toggle light/dark theme',
+    exportMenuTitle: 'Export options',
+    exportBtn: 'Export',
+    exportJson: 'Export as JSON',
+    exportCsv: 'Export as CSV',
+    newContact: 'New Contact',
+    // Search & filters
+    searchPlaceholder: 'Search by name, phone or email...',
+    clearSearch: 'Clear search',
+    catAll: 'All',
+    catFavorite: '⭐ Favorites',
+    catTrabajo: '💼 Work',
+    catFamilia: '🏠 Family',
+    catAmigos: '🎉 Friends',
+    catOtros: '📌 General',
+    sortNameAsc: 'Name (A-Z)',
+    sortNameDesc: 'Name (Z-A)',
+    sortNewest: 'Newest first',
+    sortOldest: 'Oldest first',
+    viewGridTitle: 'Grid View',
+    viewListTitle: 'List View',
+    // Empty state
+    emptyTitle: 'No contacts found',
+    emptyDesc: 'No contacts match your current search criteria.',
+    btnResetFilters: 'Reset Filters',
+    btnLoadDemo: 'Load Sample Contacts',
+    // Contact modal
+    modalTitleNew: 'New Contact',
+    modalTitleEdit: 'Edit Contact',
+    labelName: 'Full Name',
+    namePlaceholder: 'e.g.: John Smith',
+    labelPhone: 'Phone',
+    phonePlaceholder: 'e.g.: +1 555 123 4567',
+    labelEmail: 'Email Address',
+    emailPlaceholder: 'e.g.: john.smith@email.com',
+    labelCategory: 'Category',
+    optTrabajo: '💼 Work',
+    optFamilia: '🏠 Family',
+    optAmigos: '🎉 Friends',
+    optOtros: '📌 General',
+    labelFavorite: '⭐ Mark as Favorite',
+    labelNotes: 'Additional Notes (Optional)',
+    notesPlaceholder: 'Company, birthday, additional info, etc.',
+    btnCancel: 'Cancel',
+    btnSaveNew: 'Save Contact',
+    btnSaveEdit: 'Update Contact',
+    // Delete modal
+    deleteTitle: 'Delete contact?',
+    deleteBodyPrefix: 'Are you sure you want to delete',
+    deleteBodySuffix: '?',
+    deleteSubtle: 'You can undo this action for a few seconds from the notification below.',
+    btnDeleteConfirm: 'Delete',
+    // THIFI widget
+    thifiTriggerTitle: 'THIFI - AI Assistant',
+    thifiTrigger: 'Chat with THIFI ✨',
+    thifiAiTag: 'AI Support',
+    thifiSubtitle: 'Your Virtual Contact Book Assistant',
+    thifiClearTitle: 'Clear conversation',
+    thifiCloseTitle: 'Minimize chat',
+    thifiChipSearch: '🔍 Search contact',
+    thifiChipSupport: '🎫 Create support',
+    thifiChipFavorites: '⭐ My Favorites',
+    thifiChipTickets: '📋 My Tickets',
+    thifiChipHelp: '❓ Help',
+    thifiTyping: 'THIFI is typing...',
+    thifiPlaceholder: 'Ask me something or search a contact...',
+    thifiSendTitle: 'Send message',
+    // Toast / validation messages
+    toastAdded: 'added to favorites',
+    toastRemoved: 'Removed from favorites',
+    toastSaved: 'saved',
+    toastUpdated: 'updated',
+    toastDeleted: 'deleted',
+    toastRestored: 'Restored',
+    toastDemoLoaded: 'Sample contacts loaded successfully',
+    toastNoExport: 'No contacts to export',
+    toastExportedJson: 'Contacts exported as JSON',
+    toastExportedCsv: 'Contacts exported as CSV',
+    // Validation
+    validName: 'Name is required.',
+    validPhone: 'Phone number is required.',
+    // Empty states dynamic
+    emptyAgendaTitle: 'Your contact book is empty!',
+    emptyAgendaDesc: 'Add your first contact or load the sample data.',
+    emptySearchTitle: 'No results',
+    emptySearchDesc: 'No contacts found matching the current search or filter.',
+    // Star titles
+    starAdd: 'Mark as favorite',
+    starRemove: 'Remove from favorites',
+    // Card action titles
+    cardPhone: 'Phone',
+    cardEmail: 'Email address',
+    cardCall: 'Call',
+    cardMail: 'Send email',
+    cardWhatsApp: 'Send WhatsApp',
+    cardEdit: 'Edit contact',
+    cardDelete: 'Delete contact',
+  }
+};
+
+class I18nManager {
+  constructor() {
+    this.currentLang = localStorage.getItem('app_lang') || 'es';
+    this.btnLangToggle = document.getElementById('btn-lang-toggle');
+    this.bindEvents();
+    this.apply(this.currentLang);
+  }
+
+  bindEvents() {
+    if (this.btnLangToggle) {
+      this.btnLangToggle.addEventListener('click', () => {
+        const next = this.currentLang === 'es' ? 'en' : 'es';
+        this.apply(next);
+      });
+    }
+  }
+
+  t(key) {
+    return TRANSLATIONS[this.currentLang][key] || TRANSLATIONS['es'][key] || key;
+  }
+
+  apply(lang) {
+    this.currentLang = lang;
+    localStorage.setItem('app_lang', lang);
+
+    // Toggle button visual state: class 'active' = EN selected
+    if (this.btnLangToggle) {
+      this.btnLangToggle.classList.toggle('active', lang === 'en');
+    }
+
+    const dict = TRANSLATIONS[lang];
+
+    // 1. Update elements with data-i18n (text content)
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key] !== undefined) {
+        el.textContent = dict[key];
+      }
+    });
+
+    // 2. Update elements with data-i18n-placeholder (input/textarea placeholders)
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (dict[key] !== undefined) {
+        el.placeholder = dict[key];
+      }
+    });
+
+    // 3. Update elements with data-i18n-title (title attributes)
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+      const key = el.getAttribute('data-i18n-title');
+      if (dict[key] !== undefined) {
+        el.title = dict[key];
+      }
+    });
+
+    // 4. Update <html lang> attribute for accessibility
+    document.documentElement.lang = lang;
+
+    // 5. Re-render contact cards so dynamic content (titles, card texts) also updates
+    if (window.contactApp) {
+      window.contactApp.currentLang = lang;
+      window.contactApp.render();
+    }
+  }
+}
+
 // Initialize Application when DOM ready
 document.addEventListener('DOMContentLoaded', () => {
+  window.i18n = new I18nManager();
   window.contactApp = new ContactApp();
   window.thifiAssistant = new ThifiAssistant(window.contactApp);
+
+  // Re-apply translations after app initializes (so dynamic renders are translated)
+  window.i18n.apply(window.i18n.currentLang);
 });
 
