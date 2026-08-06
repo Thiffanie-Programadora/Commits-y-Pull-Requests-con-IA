@@ -1479,8 +1479,8 @@ class AuthManager {
     if (!password) {
       this.pwError.textContent = 'Ingresa tu contraseña.';
       hasError = true;
-    } else if (password.length < 4) {
-      this.pwError.textContent = 'La contraseña debe tener al menos 4 caracteres.';
+    } else if (password !== '12345') {
+      this.pwError.textContent = 'Contraseña incorrecta.';
       hasError = true;
     }
 
