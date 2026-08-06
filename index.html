@@ -226,6 +226,87 @@
   <!-- Toast Notification Container -->
   <div id="toast-container" class="toast-container"></div>
 
+  <!-- THIFI AI Assistant Floating Chat Widget -->
+  <div id="thifi-widget" class="thifi-widget">
+    <!-- Floating Chat Trigger Button -->
+    <button id="thifi-chat-trigger" class="thifi-trigger-btn" aria-label="Abrir asistente THIFI" title="THIFI - Asistente con IA">
+      <div class="thifi-avatar-glow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+          <path d="M12 12L2.5 7.5"></path>
+          <path d="m12 12 4.5 9"></path>
+          <path d="M12 12l7.5-4.5"></path>
+          <circle cx="12" cy="12" r="3" fill="currentColor"></circle>
+        </svg>
+      </div>
+      <span class="thifi-trigger-label">Habla con THIFI ✨</span>
+      <span class="thifi-badge-dot"></span>
+    </button>
+
+    <!-- Floating Chat Window Container -->
+    <div id="thifi-chat-container" class="thifi-chat-window hidden" role="dialog" aria-label="Chat con THIFI Asistente IA">
+      <!-- Header -->
+      <div class="thifi-header">
+        <div class="thifi-header-info">
+          <div class="thifi-bot-avatar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2a8 8 0 0 1 8 8v4a8 8 0 0 1-8 8 8 8 0 0 1-8-8v-4a8 8 0 0 1 8-8z"></path>
+              <circle cx="9" cy="10" r="1.5" fill="currentColor"></circle>
+              <circle cx="15" cy="10" r="1.5" fill="currentColor"></circle>
+              <path d="M9 15c1.5 1 4.5 1 6 0"></path>
+            </svg>
+            <span class="thifi-online-status" title="En línea"></span>
+          </div>
+          <div>
+            <div class="thifi-title-row">
+              <h3 class="thifi-name">THIFI</h3>
+              <span class="thifi-ai-tag">IA Soporte</span>
+            </div>
+            <p class="thifi-subtitle">Asistente Virtual de tu Agenda</p>
+          </div>
+        </div>
+        <div class="thifi-header-actions">
+          <button id="btn-thifi-clear" class="thifi-icon-btn" title="Limpiar conversación" aria-label="Limpiar conversación">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+          </button>
+          <button id="btn-thifi-close" class="thifi-icon-btn" title="Minimizar chat" aria-label="Minimizar chat">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Suggestion Chips -->
+      <div id="thifi-suggestions" class="thifi-suggestions-bar">
+        <button class="thifi-chip" data-query="Buscar un contacto">🔍 Buscar contacto</button>
+        <button class="thifi-chip" data-query="Crear ticket de soporte">🎫 Crear soporte</button>
+        <button class="thifi-chip" data-query="Mostrar mis contactos favoritos">⭐ Mis Favoritos</button>
+        <button class="thifi-chip" data-query="Ver mis tickets de soporte">📋 Mis Tickets</button>
+        <button class="thifi-chip" data-query="¿Cómo exportar contactos?">❓ Ayuda</button>
+      </div>
+
+      <!-- Chat Messages Area -->
+      <div id="thifi-chat-messages" class="thifi-messages-body">
+        <!-- Messages rendered dynamically via JS -->
+      </div>
+
+      <!-- Typing Indicator -->
+      <div id="thifi-typing-indicator" class="thifi-typing hidden">
+        <div class="thifi-typing-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="thifi-typing-text">THIFI está escribiendo...</span>
+      </div>
+
+      <!-- Input Form -->
+      <form id="thifi-chat-form" class="thifi-footer">
+        <input type="text" id="thifi-input" placeholder="Pregúntame algo o busca un contacto..." autocomplete="off" maxlength="300">
+        <button type="submit" id="btn-thifi-send" title="Enviar mensaje" aria-label="Enviar mensaje">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Application Script -->
   <script src="app.js"></script>
 </body>

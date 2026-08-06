@@ -649,7 +649,461 @@ class ContactApp {
   }
 }
 
+/**
+ * THIFI AI Floating Chat Assistant
+ */
+class ThifiAssistant {
+  constructor(app) {
+    this.app = app;
+    this.messages = JSON.parse(localStorage.getItem('thifi_chat_history')) || [];
+    this.tickets = JSON.parse(localStorage.getItem('app_support_tickets')) || [];
+    this.isOpen = false;
+    this.isTyping = false;
+
+    this.initDOM();
+    this.bindEvents();
+
+    if (this.messages.length === 0) {
+      this.addWelcomeMessage();
+    } else {
+      this.renderHistory();
+    }
+  }
+
+  initDOM() {
+    this.triggerBtn = document.getElementById('thifi-chat-trigger');
+    this.chatContainer = document.getElementById('thifi-chat-container');
+    this.btnClose = document.getElementById('btn-thifi-close');
+    this.btnClear = document.getElementById('btn-thifi-clear');
+    this.messagesContainer = document.getElementById('thifi-chat-messages');
+    this.typingIndicator = document.getElementById('thifi-typing-indicator');
+    this.form = document.getElementById('thifi-chat-form');
+    this.input = document.getElementById('thifi-input');
+    this.suggestionsContainer = document.getElementById('thifi-suggestions');
+  }
+
+  bindEvents() {
+    if (this.triggerBtn) {
+      this.triggerBtn.addEventListener('click', () => this.toggleChat());
+    }
+
+    if (this.btnClose) {
+      this.btnClose.addEventListener('click', () => this.toggleChat(false));
+    }
+
+    if (this.btnClear) {
+      this.btnClear.addEventListener('click', () => this.clearChat());
+    }
+
+    if (this.form) {
+      this.form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = this.input.value.trim();
+        if (text) {
+          this.handleUserInput(text);
+          this.input.value = '';
+        }
+      });
+    }
+
+    if (this.suggestionsContainer) {
+      this.suggestionsContainer.addEventListener('click', (e) => {
+        const chip = e.target.closest('.thifi-chip');
+        if (chip) {
+          const query = chip.getAttribute('data-query');
+          if (query) {
+            this.handleUserInput(query);
+          }
+        }
+      });
+    }
+
+    // Keyboard ESC to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isOpen) {
+        this.toggleChat(false);
+      }
+    });
+
+    // Delegated actions inside chat messages
+    if (this.messagesContainer) {
+      this.messagesContainer.addEventListener('click', (e) => {
+        const actionBtn = e.target.closest('[data-thifi-action]');
+        if (actionBtn) {
+          const action = actionBtn.getAttribute('data-thifi-action');
+          const value = actionBtn.getAttribute('data-thifi-value');
+          this.handleChatAction(action, value);
+        }
+
+        // Inline ticket form submission
+        if (e.target.matches('.thifi-btn-submit-ticket')) {
+          e.preventDefault();
+          const form = e.target.closest('.thifi-ticket-form');
+          if (form) {
+            const subject = form.querySelector('.thifi-ticket-subject').value.trim();
+            const desc = form.querySelector('.thifi-ticket-desc').value.trim();
+            const priority = form.querySelector('.thifi-ticket-priority').value;
+            if (!subject || !desc) {
+              this.app.showToast('Por favor completa el asunto y detalle del problema', 'error');
+              return;
+            }
+            this.submitSupportTicket(subject, desc, priority);
+          }
+        }
+      });
+    }
+  }
+
+  toggleChat(forceState) {
+    this.isOpen = forceState !== undefined ? forceState : !this.isOpen;
+    if (this.isOpen) {
+      this.chatContainer.classList.remove('hidden');
+      this.input.focus();
+      this.scrollToBottom();
+    } else {
+      this.chatContainer.classList.add('hidden');
+    }
+  }
+
+  addWelcomeMessage() {
+    const welcomeText = `¡Hola! 👋 Soy **THIFI**, tu asistente virtual con IA para esta agenda.
+
+Puedo ayudarte con:
+• 🔍 **Buscar contactos**: Escribe algo como *"busca a Ana"* o *"contactos de Trabajo"*.
+• 🎫 **Crear ticket de soporte**: Escribe *"tengo un problema"* o *"crear ticket"*.
+• ⚡ **Acciones rápidas**: Añadir contactos, exportar datos o personalizar el tema.
+
+¿En qué puedo ayudarte hoy?`;
+
+    const welcomeMsg = {
+      id: Date.now(),
+      sender: 'bot',
+      text: welcomeText,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    this.messages.push(welcomeMsg);
+    this.saveMessages();
+    this.renderMessage(welcomeMsg);
+  }
+
+  renderHistory() {
+    this.messagesContainer.innerHTML = '';
+    this.messages.forEach(msg => this.renderMessage(msg));
+    this.scrollToBottom();
+  }
+
+  handleUserInput(text) {
+    const userMsg = {
+      id: Date.now(),
+      sender: 'user',
+      text: text,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    this.messages.push(userMsg);
+    this.saveMessages();
+    this.renderMessage(userMsg);
+    this.scrollToBottom();
+
+    this.showTyping(true);
+
+    // Simulate AI response calculation with realistic delay
+    setTimeout(() => {
+      this.showTyping(false);
+      this.generateAIResponse(text);
+    }, 700 + Math.random() * 500);
+  }
+
+  generateAIResponse(userText) {
+    const textLower = userText.toLowerCase();
+    let botResponse = {
+      id: Date.now(),
+      sender: 'bot',
+      text: '',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      extraHTML: ''
+    };
+
+    // 1. Search Contacts Intent
+    if (
+      textLower.includes('busca') || 
+      textLower.includes('buscar') || 
+      textLower.includes('encontrar') || 
+      textLower.includes('encuentra') ||
+      textLower.includes('quien es') ||
+      textLower.includes('quién es') ||
+      textLower.includes('teléfono') ||
+      textLower.includes('telefono') ||
+      textLower.includes('contacto') ||
+      textLower.includes('contactos')
+    ) {
+      this.handleSearchIntent(textLower, botResponse);
+    }
+    // 2. Favorites Intent
+    else if (textLower.includes('favorito') || textLower.includes('favoritos')) {
+      const favorites = this.app.contacts.filter(c => c.favorite);
+      if (favorites.length === 0) {
+        botResponse.text = "No tienes contactos marcados como favoritos en este momento. ⭐\n\nPuedes marcar un contacto haciendo clic en la estrella al editarlo.";
+      } else {
+        botResponse.text = `Encontré **${favorites.length}** contacto(s) en tus **Favoritos**: ⭐`;
+        botResponse.extraHTML = favorites.map(c => this.buildContactCardHTML(c)).join('');
+      }
+    }
+    // 3. Create Support Ticket Intent
+    else if (
+      textLower.includes('soporte') || 
+      textLower.includes('ticket') || 
+      textLower.includes('problema') || 
+      textLower.includes('error') || 
+      textLower.includes('fallo') || 
+      textLower.includes('ayuda técnica') ||
+      textLower.includes('reportar') ||
+      textLower.includes('no funciona')
+    ) {
+      botResponse.text = "Lamento que tengas un inconveniente. 🛠️\n\nPuedes crear un **Ticket de Soporte** directamente desde aquí y nuestro sistema lo procesará inmediatamente:";
+      botResponse.extraHTML = `
+        <form class="thifi-ticket-form">
+          <input type="text" class="thifi-ticket-subject" placeholder="Asunto (Ej: Error al guardar contacto)" required>
+          <textarea class="thifi-ticket-desc" rows="3" placeholder="Describe tu problema con detalle..." required></textarea>
+          <select class="thifi-ticket-priority">
+            <option value="Baja">Prioridad: Baja 🟢</option>
+            <option value="Media" selected>Prioridad: Media 🟡</option>
+            <option value="Alta">Prioridad: Alta 🟠</option>
+            <option value="Urgente">Prioridad: Urgente 🔴</option>
+          </select>
+          <button type="button" class="thifi-btn-submit-ticket">✨ Enviar Ticket de Soporte</button>
+        </form>
+      `;
+    }
+    // 4. View Support Tickets Intent
+    else if (textLower.includes('mis tickets') || textLower.includes('ver tickets') || textLower.includes('mis soportes')) {
+      if (this.tickets.length === 0) {
+        botResponse.text = "Actualmente no tienes tickets de soporte registrados. 📋\n\nSi necesitas ayuda con algún fallo, dime *\"crear soporte\"*.";
+      } else {
+        botResponse.text = `Tienes **${this.tickets.length}** ticket(s) de soporte registrado(s):`;
+        botResponse.extraHTML = this.tickets.map(t => `
+          <div class="thifi-ticket-card">
+            <span class="thifi-ticket-badge">STATUS: ${t.status}</span>
+            <div style="font-weight: 700; color: var(--text-primary); margin: 2px 0;">[${t.id}] ${this.app.escapeHTML(t.subject)}</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted);">${this.app.escapeHTML(t.desc)}</div>
+            <div style="font-size: 0.7rem; opacity: 0.7; margin-top: 4px;">Prioridad: ${t.priority} • Fecha: ${t.date}</div>
+          </div>
+        `).join('');
+      }
+    }
+    // 5. App Usage Tips & Direct Shortcuts Intent
+    else if (textLower.includes('exportar') || textLower.includes('csv') || textLower.includes('json')) {
+      botResponse.text = "Puedes exportar tu lista de contactos fácilmente en formatos **JSON** o **CSV** usando los botones del menú superior o los accesos directos:";
+      botResponse.extraHTML = `
+        <div style="display: flex; gap: 6px; margin-top: 8px;">
+          <button class="thifi-action-btn" data-thifi-action="export-csv">📥 Exportar CSV</button>
+          <button class="thifi-action-btn" data-thifi-action="export-json">📄 Exportar JSON</button>
+        </div>
+      `;
+    } else if (textLower.includes('nuevo') || textLower.includes('crear contacto') || textLower.includes('añadir')) {
+      botResponse.text = "Para agregar un nuevo contacto, puedes presionar el botón **'Nuevo Contacto'** o usar este acceso directo:";
+      botResponse.extraHTML = `
+        <button class="thifi-action-btn" data-thifi-action="open-add-modal" style="margin-top: 8px;">➕ Abrir Formulario de Nuevo Contacto</button>
+      `;
+    } else if (textLower.includes('tema') || textLower.includes('oscuro') || textLower.includes('claro')) {
+      botResponse.text = "La agenda cuenta con temas Claro y Oscuro con diseño Glassmorphism. Puedes cambiar el tema con el botón del sol/luna arriba o desde aquí:";
+      botResponse.extraHTML = `
+        <button class="thifi-action-btn" data-thifi-action="toggle-theme" style="margin-top: 8px;">🎨 Cambiar Tema Claro/Oscuro</button>
+      `;
+    }
+    // 6. Conversational / General AI Responses
+    else if (textLower.includes('hola') || textLower.includes('buenas') || textLower.includes('saludos')) {
+      botResponse.text = "¡Hola! 😊 ¿Cómo puedo ayudarte hoy con tu agenda o tus contactos?";
+    } else if (textLower.includes('gracias') || textLower.includes('excelente') || textLower.includes('genial')) {
+      botResponse.text = "¡De nada! 💖 Estoy siempre aquí para ayudarte. Si necesitas algo más, solo pregúntame.";
+    } else {
+      botResponse.text = `Entendido. He analizado tu consulta sobre *"${userText}"*. 🤖\n\nPuedo realizar búsquedas de contactos, gestionar tickets de soporte técnico o ayudarte a usar la agenda. ¿Deseas hacer una búsqueda o abrir un ticket de soporte?`;
+      botResponse.extraHTML = `
+        <div style="display: flex; gap: 6px; margin-top: 8px;">
+          <button class="thifi-action-btn" data-thifi-action="prompt" data-thifi-value="Buscar contacto">🔍 Buscar contacto</button>
+          <button class="thifi-action-btn" data-thifi-action="prompt" data-thifi-value="Crear ticket de soporte">🎫 Crear soporte</button>
+        </div>
+      `;
+    }
+
+    this.messages.push(botResponse);
+    this.saveMessages();
+    this.renderMessage(botResponse);
+    this.scrollToBottom();
+  }
+
+  handleSearchIntent(textLower, botResponse) {
+    const query = textLower
+      .replace(/busca|buscar|encuentra|encontrar|quien es|quién es|teléfono|telefono|contacto|contactos|dame|a|el|de|un|una|los|las/gi, '')
+      .trim();
+
+    let matches = [];
+    if (query.length > 0) {
+      matches = this.app.contacts.filter(c => 
+        c.name.toLowerCase().includes(query) ||
+        c.phone.toLowerCase().includes(query) ||
+        (c.email && c.email.toLowerCase().includes(query)) ||
+        c.category.toLowerCase().includes(query) ||
+        (c.notes && c.notes.toLowerCase().includes(query))
+      );
+    } else {
+      matches = this.app.contacts;
+    }
+
+    if (matches.length === 0) {
+      botResponse.text = `No encontré ningún contacto en tu agenda que coincida con **"${query}"**. 🔍\n\n¿Deseas agregar a esta persona a tu agenda?`;
+      botResponse.extraHTML = `
+        <button class="thifi-action-btn" data-thifi-action="open-add-modal" style="margin-top: 8px;">➕ Crear Nuevo Contacto</button>
+      `;
+    } else {
+      botResponse.text = `Encontré **${matches.length}** resultado(s) en tu agenda:`;
+      botResponse.extraHTML = matches.map(c => this.buildContactCardHTML(c)).join('');
+    }
+  }
+
+  buildContactCardHTML(c) {
+    return `
+      <div class="thifi-contact-card">
+        <div class="thifi-contact-header">
+          <span class="thifi-contact-name">${c.favorite ? '⭐ ' : ''}${this.app.escapeHTML(c.name)}</span>
+          <span class="thifi-contact-badge">${this.app.escapeHTML(c.category)}</span>
+        </div>
+        <div class="thifi-contact-info">
+          <div>📞 <strong>${this.app.escapeHTML(c.phone)}</strong></div>
+          ${c.email ? `<div>✉️ ${this.app.escapeHTML(c.email)}</div>` : ''}
+          ${c.notes ? `<div>📝 ${this.app.escapeHTML(c.notes)}</div>` : ''}
+        </div>
+        <div class="thifi-contact-actions">
+          <button class="thifi-action-btn" data-thifi-action="filter-search" data-thifi-value="${this.app.escapeHTML(c.name)}">🔍 Ver en agenda</button>
+          <button class="thifi-action-btn" data-thifi-action="copy-phone" data-thifi-value="${this.app.escapeHTML(c.phone)}">📋 Copiar tel</button>
+        </div>
+      </div>
+    `;
+  }
+
+  submitSupportTicket(subject, desc, priority) {
+    const ticketId = 'TICK-' + Math.floor(1000 + Math.random() * 9000);
+    const newTicket = {
+      id: ticketId,
+      subject: subject,
+      desc: desc,
+      priority: priority,
+      status: 'En Revisión ⏳',
+      date: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
+    };
+
+    this.tickets.unshift(newTicket);
+    localStorage.setItem('app_support_tickets', JSON.stringify(this.tickets));
+
+    const confirmationMsg = {
+      id: Date.now(),
+      sender: 'bot',
+      text: `¡Ticket de soporte creado con éxito! 🎉\n\nReferencia del ticket: **${ticketId}**`,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      extraHTML: `
+        <div class="thifi-ticket-card">
+          <span class="thifi-ticket-badge">ESTADO: EN REVISIÓN ⏳</span>
+          <div style="font-weight: 700; color: var(--text-primary); margin: 2px 0;">[${ticketId}] ${this.app.escapeHTML(subject)}</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted);">${this.app.escapeHTML(desc)}</div>
+          <div style="font-size: 0.7rem; opacity: 0.7; margin-top: 4px;">Prioridad: ${priority} • Generado con IA THIFI</div>
+        </div>
+      `
+    };
+
+    this.messages.push(confirmationMsg);
+    this.saveMessages();
+    this.renderMessage(confirmationMsg);
+    this.scrollToBottom();
+
+    this.app.showToast(`Ticket de soporte ${ticketId} registrado`, 'success');
+  }
+
+  handleChatAction(action, value) {
+    if (action === 'filter-search' && value) {
+      this.app.searchInput.value = value;
+      this.app.searchTerm = value;
+      this.app.render();
+      this.app.showToast(`Filtrando por "${value}"`, 'info');
+    } else if (action === 'copy-phone' && value) {
+      navigator.clipboard.writeText(value).then(() => {
+        this.app.showToast(`Teléfono ${value} copiado`, 'success');
+      }).catch(() => {
+        this.app.showToast(`Teléfono: ${value}`, 'info');
+      });
+    } else if (action === 'open-add-modal') {
+      this.app.openAddContactModal();
+    } else if (action === 'export-csv') {
+      this.app.exportCSV();
+    } else if (action === 'export-json') {
+      this.app.exportJSON();
+    } else if (action === 'toggle-theme') {
+      const newTheme = this.app.theme === 'dark' ? 'light' : 'dark';
+      this.app.applyTheme(newTheme);
+      this.app.showToast(`Tema cambiado a ${newTheme}`, 'info');
+    } else if (action === 'prompt' && value) {
+      this.handleUserInput(value);
+    }
+  }
+
+  renderMessage(msgObj) {
+    const isUser = msgObj.sender === 'user';
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `thifi-msg ${isUser ? 'thifi-msg-user' : 'thifi-msg-bot'}`;
+
+    let parsedText = this.app.escapeHTML(msgObj.text)
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n/g, '<br>');
+
+    msgDiv.innerHTML = `
+      <div class="thifi-msg-avatar">
+        ${isUser ? '👤' : '✨'}
+      </div>
+      <div class="thifi-msg-content">
+        <div>${parsedText}</div>
+        ${msgObj.extraHTML || ''}
+        <span class="thifi-msg-time">${msgObj.timestamp}</span>
+      </div>
+    `;
+
+    this.messagesContainer.appendChild(msgDiv);
+  }
+
+  showTyping(show) {
+    this.isTyping = show;
+    if (show) {
+      this.typingIndicator.classList.remove('hidden');
+    } else {
+      this.typingIndicator.classList.add('hidden');
+    }
+    this.scrollToBottom();
+  }
+
+  scrollToBottom() {
+    setTimeout(() => {
+      this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+    }, 50);
+  }
+
+  clearChat() {
+    if (confirm('¿Deseas borrar el historial de conversación con THIFI?')) {
+      this.messages = [];
+      localStorage.removeItem('thifi_chat_history');
+      this.messagesContainer.innerHTML = '';
+      this.addWelcomeMessage();
+      this.app.showToast('Historial de chat limpiado', 'info');
+    }
+  }
+
+  saveMessages() {
+    localStorage.setItem('thifi_chat_history', JSON.stringify(this.messages));
+  }
+}
+
 // Initialize Application when DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   window.contactApp = new ContactApp();
+  window.thifiAssistant = new ThifiAssistant(window.contactApp);
 });
+
